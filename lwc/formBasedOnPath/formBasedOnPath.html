@@ -1,0 +1,15 @@
+<template>
+
+
+	<c-flowformlwc edit-all-inputs="true" step={step} steps-field={stepsField} record-id={recordId} onsave={handleSave} oncancel={handleCancel}>
+		<div slot="body">
+			<!--additionals componentes for the body-->
+		</div>
+
+		<div slot="footer">
+			<!--additional componentes for the footer-->
+			<c-ob-webservice-buttons step={step}></c-ob-webservice-buttons>
+		</div>
+	</c-flowformlwc>
+
+</template>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Confirm Personal Data 2</label>
+    <protected>false</protected>
+    <values>
+        <field>DynamicPathConfig__c</field>
+        <value xsi:type="xsd:string">OnBoarding</value>
+    </values>
+    <values>
+        <field>JSONFieldConfig__c</field>
+        <value xsi:type="xsd:string">[  
+{  
+&quot;label&quot;:&quot;País&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,  
+&quot;apiName&quot;:&quot;Country_ISO__c&quot;,  
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getCountryList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;isoCode3&quot;]  
+},
+{  
+&quot;label&quot;:&quot;Nacionalidad&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,  
+&quot;apiName&quot;:&quot;Nationality_ISO__c&quot;,  
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:true,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getNationalityList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;isoCode3&quot;],  
+&quot;params&quot; : {&quot;Country_ISO__c&quot; : &quot;value&quot;}  
+},
+{  
+&quot;label&quot;:&quot;Fecha de caducidad&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,  
+&quot;apiName&quot;:&quot;ExpiryDate__c&quot;,  
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;standard&quot;:true  
+}
+]</value>
+    </values>
+</CustomMetadata>

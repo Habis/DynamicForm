@@ -1,0 +1,18 @@
+<template>
+	<template for:each={lstmsgErrors} for:item="error" for:index="index">
+		<div key={error.icon} class="alertmsg slds-m-vertical_small">
+
+			<div class={error.classTxt}>
+
+				<div class="alert-title">
+
+					<lightning-icon icon-name={error.icon} alternative-text={error.icon} title={error.icon} size="xx-small"></lightning-icon>
+				</div>
+				<div class="alert-body">
+					{error.msg}
+				</div>
+
+			</div>
+		</div>
+	</template>
+</template>

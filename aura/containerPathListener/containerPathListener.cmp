@@ -1,0 +1,11 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global">
+   
+	<aura:handler event="c:pathEvent" action="{!c.handlePathChange}" />
+	<aura:registerEvent name="pathevtrst" type="c:pathEventReset"/>
+
+	<aura:attribute name="step" type="String"/>
+    <aura:attribute name="stepsField" type="String"/>
+
+	<c:formBasedOnPath step="{!v.step}" stepsField="{!v.stepsField}" recordId="{!v.recordId}" oncancel="{!c.cancelPath}"/>
+	
+</aura:component>	

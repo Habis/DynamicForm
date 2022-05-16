@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Address Entry</label>
+    <protected>false</protected>
+    <values>
+        <field>DynamicPathConfig__c</field>
+        <value xsi:type="xsd:string">OnBoarding</value>
+    </values>
+    <values>
+        <field>JSONFieldConfig__c</field>
+        <value xsi:type="xsd:string">[  
+{  
+&quot;label&quot;:&quot;Billing Street&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,  
+&quot;apiName&quot;:&quot;BillingStreet&quot;,  
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;standard&quot;:true 
+},
+{  
+&quot;label&quot;:&quot;State Code&quot;,  
+&quot;apiName&quot;:&quot;StateCode__c&quot;, 
+&quot;sobj&quot; : &quot;firstHolder&quot;,  
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getStateList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;isoCode3&quot;]
+},
+{  
+&quot;label&quot;:&quot;Department&quot;,  
+&quot;apiName&quot;:&quot;DepartmentCode__c&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;, 
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getDepartmentList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;isoCode3&quot;], 
+&quot;params&quot; : {&quot;StateCode__c&quot; : &quot;value&quot;}  
+}
+]</value>
+    </values>
+</CustomMetadata>

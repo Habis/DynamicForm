@@ -1,0 +1,14 @@
+<aura:component implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global">
+    
+	<aura:registerEvent name="pathevt" type="c:pathEvent"/>
+	<aura:handler event="c:pathEventReset" action="{!c.handleResetPath}" />
+
+    <lightning:path 
+		aura:id="path" 
+		recordId="{!v.recordId}"
+        hideUpdateButton="true"
+        onselect="{!c.handleSelectStep}"
+   		/>
+
+
+</aura:component>

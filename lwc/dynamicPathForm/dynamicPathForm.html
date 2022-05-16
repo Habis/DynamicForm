@@ -1,0 +1,81 @@
+<template>
+	
+	<c-msg-alert if:true={showAlert} map-errors={mapErrors}></c-msg-alert>
+	<!--
+	<button onclick={descShowForm} value="desactivar show form" name="desactivar show form">desactivar show form</button>
+	<button onclick={actShowForm} value="activar show form">activar show form</button>
+-->
+	<lightning-card>
+		<div style="min-height:20rem" class="slds-var-p-horizontal_small">
+
+			<div if:true={showSpinner}>
+				<lightning-spinner
+					alternative-text="Loading..." variant="brand">
+				</lightning-spinner>
+			</div>
+
+			<!-- Si showForm es true se muestra -->
+			<template if:true={showForm}>
+				<!--<lightning-record-edit-form
+					object-api-name="Opportunity"
+					record-id="0067e00000KEBxCAAX">-->
+				<lightning-layout multiple-rows data-id="layoutPrincipal">
+					
+					<!--  -->
+					<template for:each={currentForm} for:item="finfo" for:index="index">
+						<template if:true={finfo.section}>
+							<lightning-layout-item  key={finfo.apiName} data-name={finfo.apiName}  padding="around-small"
+							size={finfo.size}>
+								<!-- TODO: añadir componente aquí con el estilo de la sección-->
+
+
+								<h3 class="slds-section__title slds-theme_shade">
+									<span class="slds-truncate slds-p-horizontal_small" title="Section Title">{finfo.title}</span>
+								</h3>
+							</lightning-layout-item>
+						</template>
+
+						<template if:false={finfo.section}>
+							<lightning-layout-item  key={finfo.apiName} data-name={finfo.apiName}  data-sobj={finfo.sobj}  padding="around-small"
+							size="6" small-device-size="12" medium-device-size="12" large-device-size="6">
+								<c-pathformfield index={index} onchangeedit={handleChangeEdit}  data-sobj={finfo.sobj}
+									ontogglelayoutitem={toggleLayoutItem} data-name={finfo.apiName} finfo={finfo}
+									view-only={viewOnly} onvaluechanged={fieldChanged} reload=true></c-pathformfield>
+							</lightning-layout-item>
+						</template>
+
+
+					</template>
+
+					<slot name="body"></slot>
+
+				</lightning-layout>
+
+				<!--</lightning-record-edit-form>-->
+			</template>
+
+		</div>
+
+
+		<div slot="footer" class="slds-clearfix">
+			<!-- SLOTS STANDARD BUTTONS -->
+			<div class="slds-float_left">
+				<lightning-icon icon-name="utility:refresh" alternative-text="edit" title="Edit" onclick={cancelRefresh}
+					class="btnCursor" size="small"></lightning-icon>
+			</div>
+			
+			<div class="slds-float_right">
+			
+				<lightning-button disabled={disableSaveBtn}  variant="brand" label={labelBtnSave}
+				title="Primary action" onclick={handleSave}></lightning-button>
+
+			</div>
+			<!-- END SLOTS STANDARD BUTTONS -->
+			<!-- SLOTS CUSTOM BUTTONS-->
+			<slot name="footer"></slot>
+			<!-- END SLOTS CUSTOM BUTTONS -->
+		</div>
+
+	</lightning-card>
+
+</template>

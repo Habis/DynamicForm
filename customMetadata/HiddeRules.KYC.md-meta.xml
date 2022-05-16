@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>KYC</label>
+    <protected>false</protected>
+    <values>
+        <field>FormConfig__c</field>
+        <value xsi:type="xsd:string">KYC_Questions</value>
+    </values>
+    <values>
+        <field>JSONHiddeRule__c</field>
+        <value xsi:type="xsd:string">{
+	&quot;CargoActual__c&quot;: [{
+		&quot;show&quot;: &quot;SituacionLaboral__c&quot;,
+		&quot;value&quot;: &quot;1&quot;
+	}, {
+		&quot;show&quot;: [&quot;TipoDeActividad__c&quot;, &quot;SectorProfesional__c&quot;],
+		&quot;value&quot;: &quot;2&quot;
+	}]
+
+}</value>
+    </values>
+</CustomMetadata>

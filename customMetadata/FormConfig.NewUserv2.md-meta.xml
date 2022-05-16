@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>New User</label>
+    <protected>false</protected>
+    <values>
+        <field>DynamicPathConfig__c</field>
+        <value xsi:type="xsd:string">Test</value>
+    </values>
+    <values>
+        <field>JSONFieldConfig__c</field>
+        <value xsi:type="xsd:string">[
+	{
+	   &quot;label&quot;:&quot;Client Name&quot;,
+	   &quot;sobj&quot; : &quot;firstHolder&quot;,
+	   &quot;apiName&quot;:&quot;FirstName&quot;,
+	   &quot;required&quot;:true,
+	   &quot;readOnly&quot;:false,
+	   &quot;hidden&quot;:false,
+	   &quot;standard&quot;:true
+	},
+	{
+	   &quot;label&quot;:&quot;Email&quot;,
+	   &quot;sobj&quot; : &quot;firstHolder&quot;,
+	   &quot;apiName&quot;:&quot;PersonEmail&quot;,
+	   &quot;required&quot;:true,
+	   &quot;readOnly&quot;:false,
+	   &quot;hidden&quot;:false,
+	   &quot;standard&quot;:true
+	},
+	 {
+	   &quot;label&quot;:&quot;Teléfono&quot;,
+	   &quot;sobj&quot; : &quot;firstHolder&quot;,
+	   &quot;apiName&quot;:&quot;Phone&quot;,
+	   &quot;required&quot;:true,
+	   &quot;readOnly&quot;:false,
+	   &quot;hidden&quot;:false,
+	   &quot;standard&quot;:true
+	}
+ ]</value>
+    </values>
+</CustomMetadata>

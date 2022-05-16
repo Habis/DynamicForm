@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>webServiceTokens__c</fullName>
+    <description>auth info</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Web Service Tokens</label>
+    <referenceTo>webService_tokens__mdt</referenceTo>
+    <relationshipLabel>Web Services Info</relationshipLabel>
+    <relationshipName>Web_Services_Info</relationshipName>
+    <required>false</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>

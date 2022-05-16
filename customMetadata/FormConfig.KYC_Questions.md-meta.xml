@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>KYC Questions</label>
+    <protected>false</protected>
+    <values>
+        <field>DynamicPathConfig__c</field>
+        <value xsi:type="xsd:string">OnBoarding</value>
+    </values>
+    <values>
+        <field>JSONFieldConfig__c</field>
+        <value xsi:type="xsd:string">[  
+{  
+&quot;label&quot;:&quot;Cargo Actual&quot;,  
+&quot;apiName&quot;:&quot;CargoActual__c&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getCargoList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;value&quot;] 
+},
+{  
+&quot;label&quot;:&quot;Situacion Laboral&quot;,  
+&quot;apiName&quot;:&quot;SituacionLaboral__c&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getSituacionList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;value&quot;], 
+&quot;params&quot; : {&quot;CargoActual__c&quot; : &quot;value&quot;} 
+},
+{  
+&quot;label&quot;:&quot;Tipo De Actividad&quot;,  
+&quot;apiName&quot;:&quot;TipoDeActividad__c&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getActividadList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;value&quot;], 
+&quot;params&quot; : {&quot;CargoActual__c&quot; : &quot;value&quot;} 
+},
+{  
+&quot;label&quot;:&quot;Sector Profesional&quot;,  
+&quot;apiName&quot;:&quot;SectorProfesional__c&quot;,  
+&quot;sobj&quot; : &quot;firstHolder&quot;,
+&quot;required&quot;:true,  
+&quot;readOnly&quot;:false,  
+&quot;hidden&quot;:false,  
+&quot;fieldType&quot;: &quot;picklist&quot;,  
+&quot;standard&quot;:false,  
+&quot;endpoint&quot; : &quot;getSectorList&quot;,  
+&quot;keys&quot; : [&quot;name&quot;, &quot;value&quot;], 
+&quot;params&quot; : {&quot;CargoActual__c&quot; : &quot;value&quot;} 
+}
+]</value>
+    </values>
+</CustomMetadata>

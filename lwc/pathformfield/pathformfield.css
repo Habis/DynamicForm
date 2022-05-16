@@ -1,0 +1,14 @@
+.inputCursor[data-viewonly=false]{
+    cursor: pointer;
+}
+
+.liEdit{
+    --lwc-colorTextIconDefault: rgb(221,219,218);
+    
+}
+
+.inputCursor:hover .liEdit{ --lwc-colorTextIconDefault: rgb(112,110,107); }
+
+.displayNone{
+	display:none;
+}

@@ -1,0 +1,10 @@
+.displayNone{
+	display:none;
+}
+.editBgColor{
+	background-color: #FAFFBD;
+}
+.btnCursor{
+	margin-top: 1px;
+    cursor: pointer;
+}

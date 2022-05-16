@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>OnBoarding</label>
+    <protected>false</protected>
+    <values>
+        <field>JSONBlockingConditions__c</field>
+        <value xsi:type="xsd:string">[
+	{
+		&quot;msg&quot; : &quot;Dónde vas paquito?&quot;,
+		&quot;condition&quot; : &quot;$firstHolder.FirstLastName__c== &apos;paquito&apos; &amp;&amp; $firstHolder.SecondLastName__c== &apos;porras&apos;&quot;,
+		&quot;icon&quot; : &quot;utility:error&quot;,
+		&quot;bloq&quot; : { &quot;bloq&quot; : false, &quot;steps&quot; : [&quot;Accepting docs&quot;]}
+	}
+]</value>
+    </values>
+    <values>
+        <field>RecordType__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>SObjectType__c</field>
+        <value xsi:type="xsd:string">Opportunity</value>
+    </values>
+</CustomMetadata>
