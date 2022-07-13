@@ -1,54 +1,56 @@
 <template>
+	<template if:true={showForm}>
+		<template if:false={loaded}>
 
-	<template if:false={loaded}>
+			<lightning-card>
 
-		<lightning-card>
-
-			<div class="slds-var-p-horizontal_small">
-	
-				<div>
-					<lightning-spinner
-						alternative-text="Loading..." variant="brand">
-					</lightning-spinner>
+				<div class="slds-var-p-horizontal_small">
+					
+					<div>
+						<lightning-spinner
+							alternative-text="Loading..." variant="brand">
+						</lightning-spinner>
+					</div>
+		
+					<div class="slds-align_absolute-center" style="min-height:20rem">
+						Cargando....
+					</div>
+		
+		
 				</div>
-	
-				<div class="slds-align_absolute-center" style="min-height:20rem">
-					Mensaje guapo de carga
-				</div>
-	
-	
-			</div>
-	
-		</lightning-card>
+		
+			</lightning-card>
 
+		</template>
+
+		<template if:true={loaded}>
+			<c-dynamic-path-form 
+								show-spinner={showSpinner}
+								init={init}
+								step-field-api-name={stepsField} 
+								record-id={recordId} 
+								sobject-type={sobjectType} 
+								hidden-rules={hiddenRules} 
+								config-steps-order={configStepsOrder} 
+								configinfo={configInfoJson} 
+								bloqconditions={bloqconditions} 
+								viewonlyconditions={viewOnlyconditions}
+								mapsobjsdb={mapsobjsdb} 
+								onsavex={doSave} 
+								oncancelx={doCancel} 
+								actual-step={actualStep} 
+								step={step}
+								edit-all-inputs="true">
+
+
+			<slot name="body" slot="body">
+				
+			</slot>
+			<slot name="footer" slot="footer">
+
+			</slot>
+
+			</c-dynamic-path-form>
+		</template>
 	</template>
-
-	<template if:true={loaded}>
-		<c-dynamic-path-form 
-							show-spinner={showSpinner}
-							init={init}
-							step-field-api-name={stepsField} 
-							record-id={recordId} 
-							sobject-type={sobjectType} 
-							hidden-rules={hiddenRules} 
-							config-steps-order={configStepsOrder} 
-							configinfo={configInfoJson} 
-							bloqconditions={bloqconditions} 
-							mapsobjsdb={mapsobjsdb} 
-							onsavex={doSave} 
-							oncancelx={doCancel} 
-							actual-step={actualStep} 
-							step={step}>
-
-
-		<slot name="body" slot="body">
-			
-		</slot>
-		<slot name="footer" slot="footer">
-
-		</slot>
-
-		</c-dynamic-path-form>
-	</template>
-
 </template>

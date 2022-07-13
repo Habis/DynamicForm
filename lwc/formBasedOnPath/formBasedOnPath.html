@@ -1,15 +1,20 @@
+<!--
+  @description       : 
+  @author            : Antonio Pardo Corral
+  @group             : 
+  @last modified on  : 06-07-2022
+  @last modified by  : Rafael Vargas Pinilla
+-->
 <template>
-
-
-	<c-flowformlwc edit-all-inputs="true" step={step} steps-field={stepsField} record-id={recordId} onsave={handleSave} oncancel={handleCancel}>
+	<c-flowformlwc step={step} steps-field={stepsField} record-id={recordId} onsave={handleSave} oncancel={handleCancel}>
 		<div slot="body">
 			<!--additionals componentes for the body-->
 		</div>
 
 		<div slot="footer">
 			<!--additional componentes for the footer-->
-			<c-ob-webservice-buttons step={step}></c-ob-webservice-buttons>
+			<c-ob-webservice-buttons oncancel={handleCancelButtons} step={step} steps-field={stepsField} record-id={recordId}></c-ob-webservice-buttons>
 		</div>
 	</c-flowformlwc>
-
+	
 </template>

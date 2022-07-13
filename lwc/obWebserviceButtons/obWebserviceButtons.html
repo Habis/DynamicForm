@@ -1,7 +1,19 @@
+<!--
+  @description       : 
+  @author            : Antonio Pardo Corral
+  @group             : 
+  @last modified on  : 06-05-2022
+  @last modified by  : Rafael Vargas Pinilla
+-->
 <template>
-    <div class="slds-float_right">
-        <lightning-button class="slds-p-right_x-small" label="prueba 1"></lightning-button>
-        <lightning-button class="slds-p-right_x-small" label="prueba 2"></lightning-button>
-        <lightning-button class="slds-p-right_x-small" label="prueba 3"></lightning-button>
+    <div  if:true={acceptingDocstBtn} class="slds-float_right">
+		<lightning-button class="slds-p-right_x-small" variant="brand" label="Alta de acuerdos" onclick={showAltaAcuerdos}></lightning-button>
    </div>
+   <div  if:true={verificationBtn} class="slds-float_right">
+		<lightning-button class="slds-p-right_x-small" variant="brand" label="Aprobar Cuenta" onclick={showAltaAcuerdos}></lightning-button>
+   </div>
+   <div  if:true={contractGenBtn} class="slds-float_right">
+		<lightning-button class="slds-p-right_x-small" variant="brand" label="Generar contrato" onclick={contractGen}></lightning-button>
+   </div>
+   <c-agrement-modal onexit={handleExitModal} record-id={recordId} btn={evtBtn}></c-agrement-modal>
 </template>

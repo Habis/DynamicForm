@@ -20,4 +20,7 @@ public interface Service_CLS {
 	Object runNoDefinedObj();
 	Object setMockResponseNoDefinedObj();
 	String getMdtName();
+
+	List<GetAllMovementsResponse> runBodyLst();
+	List<GetAllMovementsResponse> setMockListResponse();
 }

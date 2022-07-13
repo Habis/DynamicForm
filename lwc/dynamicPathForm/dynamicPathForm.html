@@ -1,5 +1,5 @@
 <template>
-	
+
 	<c-msg-alert if:true={showAlert} map-errors={mapErrors}></c-msg-alert>
 	<!--
 	<button onclick={descShowForm} value="desactivar show form" name="desactivar show form">desactivar show form</button>
@@ -37,13 +37,12 @@
 
 						<template if:false={finfo.section}>
 							<lightning-layout-item  key={finfo.apiName} data-name={finfo.apiName}  data-sobj={finfo.sobj}  padding="around-small"
-							size="6" small-device-size="12" medium-device-size="12" large-device-size="6">
+							size={finfo.size} small-device-size="12" medium-device-size="12" large-device-size={finfo.size}>
 								<c-pathformfield index={index} onchangeedit={handleChangeEdit}  data-sobj={finfo.sobj}
 									ontogglelayoutitem={toggleLayoutItem} data-name={finfo.apiName} finfo={finfo}
 									view-only={viewOnly} onvaluechanged={fieldChanged} reload=true></c-pathformfield>
 							</lightning-layout-item>
 						</template>
-
 
 					</template>
 
@@ -51,13 +50,17 @@
 
 				</lightning-layout>
 
+
 				<!--</lightning-record-edit-form>-->
+			</template>
+			<template if:false={showForm}>
+				
 			</template>
 
 		</div>
 
 
-		<div slot="footer" class="slds-clearfix">
+		<div slot="footer" class="slds-clearfix" if:false={showFooter}>
 			<!-- SLOTS STANDARD BUTTONS -->
 			<div class="slds-float_left">
 				<lightning-icon icon-name="utility:refresh" alternative-text="edit" title="Edit" onclick={cancelRefresh}
@@ -72,7 +75,9 @@
 			</div>
 			<!-- END SLOTS STANDARD BUTTONS -->
 			<!-- SLOTS CUSTOM BUTTONS-->
-			<slot name="footer"></slot>
+			<div data-disabled={disableSaveBtn} data-name="customBtns">
+				<slot name="footer"></slot>
+			</div>
 			<!-- END SLOTS CUSTOM BUTTONS -->
 		</div>
 

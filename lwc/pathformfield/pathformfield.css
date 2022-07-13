@@ -12,3 +12,17 @@
 .displayNone{
 	display:none;
 }
+
+div[data-islink="true"] div div{
+	cursor: pointer;
+	color:#35A0D6;
+}
+
+div[data-islink="true"] div div:hover{
+	color:#355D96;
+	text-decoration: underline;
+}
+
+abbr[data-ftype="boolean"] {
+	display: none;
+}

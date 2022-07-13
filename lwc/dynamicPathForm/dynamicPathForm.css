@@ -8,3 +8,11 @@
 	margin-top: 1px;
     cursor: pointer;
 }
+.disableFooter{
+	pointer-events: none;
+    opacity: 0.4;
+}
+div[data-disabled='true'][data-name='customBtns']{
+	pointer-events: none;
+    opacity: 0.4;
+}

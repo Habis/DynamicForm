@@ -15,6 +15,7 @@ export default class DynamicPathForm extends LightningElement {
 	@api sobjectType;
 	@api stepFieldApiName;
 	@api bloqconditions;
+	@api viewonlyconditions;
 	@api mapsobjsdb;
 	@api showSpinner;
 	mapErrors = {'lstmsgErrors': [] , 'lstmsg': [], 'lststeps': [], 'bloq': false };
@@ -23,12 +24,14 @@ export default class DynamicPathForm extends LightningElement {
 	config_hiddenFields = {};
 	paramsWSConfig = {};
 	testArray = {};
+	fieldhaveinputs = true;
 	showForm = false;
 	viewOnly = false;
 	currentStep;
 	@api actualStep;
 	currentForm;
 	clave;
+	showFooter = false;
 	btnSaving = false;
 	showAlert = false;
 	reloadcmp = true;
@@ -51,11 +54,13 @@ export default class DynamicPathForm extends LightningElement {
 	initFormByStep(value){
 		
 		this.showForm = false;
-		if (this.init) {
+		if (this.init) {			
 			this.configinfo = JSON.parse(JSON.stringify(this.configinfo));
-			this.mapsobjsdb = JSON.parse(JSON.stringify(this.mapsobjsdb));
-			console.log('this.configinfo ', this.configinfo);
+			this.mapsobjsdb = JSON.parse(JSON.stringify(this.mapsobjsdb));	
+			console.log('this.configinfo ', this.configinfo);	console.log('--value--', value);	
 			if(this.bloqconditions)this.bloqconditions = JSON.parse(JSON.stringify(this.bloqconditions));
+			if(this.viewonlyconditions)this.viewonlyconditions = JSON.parse(JSON.stringify(this.viewonlyconditions));
+			console.log('viewonlyconditions ', this.viewonlyconditions);
 			this.init = false;
 			//this.viewOnly = this.disableBtnEval;
 		}
@@ -63,36 +68,34 @@ export default class DynamicPathForm extends LightningElement {
 		this.draftValues = {};
 		this.currentForm = [];
 		this.currentForm = this.configinfo[value] ? this.configinfo[value] : [];
-		console.log('this.currentForm', this.currentForm);
+		console.log("currentForm", this.mapsobjsdb);	
+		//this.changeSectionTitle(this.mapsobjsdb, this.currentForm);
 		this.customEval(this.mapsobjsdb);
+		this.viewOnlyMode(this.mapsobjsdb);
 		//this.disableBtnEval();
 
-		if (this.hiddenRules && this.hiddenRules[value]) this.config_hiddenFields = this.hiddenRules[value] ? this.hiddenRules[value] : {};
-		console.log('this.mapsobjsdb', this.hiddenRules);
-
-		if (this.currentForm) {
+		if (this.hiddenRules && this.hiddenRules[value]) this.config_hiddenFields = this.hiddenRules[value] ? this.hiddenRules[value] : {};		
+		this.labelBtnSave = 'Edit';
+		if (this.currentForm.length != 0) {
 			this.showForm = true;
 			this.reloadcmp = true;
-
-			this.labelBtnSave = 'Edit';
-			console.log('this.viewOnly ', this.viewOnly);
+			console.log('desactivar btn');
 			this.viewOnly = this.disableSaveBtn;
-
-			console.log('this.viewOnly ', this.viewOnly);
+			
+		}else{
+			console.log('--muestra--');
+				this.showForm = false;
 		}
 		this.initFormRulesBool = true;
 		this.showSpinner = false;
 	}
 
-
-	customEval(mapsobjsdb) {
-		console.log('customEval obj this.mapsobjsdb', mapsobjsdb);
-
-		if(this.bloqconditions){
+	viewOnlyMode(mapsobjsdb){
+		console.log('>>> viewOnlyMode ', mapsobjsdb);
+		if(this.viewonlyconditions){
 			var mapkeys = Object.keys(mapsobjsdb);
-
-			for (let i = 0; i < this.bloqconditions.length; i++) {
-				let conditionAux = this.bloqconditions[i].condition;
+			for (let i = 0; i < this.viewonlyconditions.length; i++) {
+				let conditionAux = this.viewonlyconditions[i].condition;
 
 				mapkeys.forEach(function (key) {
 
@@ -101,74 +104,116 @@ export default class DynamicPathForm extends LightningElement {
 					}
 
 				})
-
-
+				
 				if (this.calccondition(conditionAux, mapsobjsdb)) {
-
-					if (this.mapErrors.lstmsg.indexOf(this.bloqconditions[i].msg) == -1) {
-						if (!this.mapErrors.bloq) {
-
-							this.mapErrors.bloq = this.bloqconditions[i].bloq.bloq;
-							this.showAlert = true;
-
-						}
-
-						this.mapErrors.lstmsgErrors.push({'msg' : this.bloqconditions[i].msg, 'icon' : this.bloqconditions[i].icon});
-						this.mapErrors.lstmsg.push(this.bloqconditions[i].msg);
-
-						this.mapErrors.lststeps = this.mapErrors.lststeps.concat(this.bloqconditions[i].bloq.steps);
-						console.log(this.bloqconditions[i].bloq.steps);
-						console.log(this.mapErrors.lststeps)
-						//this.mapErrors.lstIcons = this.bloqconditions[i].icon;
-					}
-				} else {
-					if (this.mapErrors.lstmsg.length > 0 && this.mapErrors.lstmsg.indexOf(this.bloqconditions[i].msg) != -1) {
-
-						let msgindex = this.mapErrors.lstmsg.indexOf(this.bloqconditions[i].msg);
-						this.mapErrors.lstmsg.splice(msgindex, 1);
-						this.mapErrors.lstmsgErrors.splice(msgindex, 1);
-
-						if (this.mapErrors.lststeps.length > 0 && this.mapErrors.lststeps.indexOf(this.bloqconditions[i].bloq.steps) != - 1) {
-							this.mapErrors.lststeps.splice(this.mapErrors.lststeps.indexOf(this.bloqconditions[i].bloq.steps), 1);
-						}
-
-					}
-					if (this.mapErrors.lstmsg.length == 0) {
-
-						this.showAlert = false;
-						this.mapErrors.bloq = false;
-					} else {
-						this.showAlert = true;
-					}
-
+					this.mapErrors.bloq = true;
+					this.viewOnly = this.disableSaveBtn;
+					this.showFooter = true;
+					return;
 				}
+			}
+		}
+	}
 
+
+	customEval(mapsobjsdb) {		
+		console.log('mapsobjsdb ', mapsobjsdb , ' this.bloqconditions ', this.bloqconditions);
+		if(this.bloqconditions){
+			var mapkeys = Object.keys(mapsobjsdb);
+
+			for (let i = 0; i < this.bloqconditions.length; i++) {
+				
+				let indexCurrentStep = this.configStepsOrder[this.currentStep];
+				let indexActualStep = this.bloqconditions[i].show ? this.configStepsOrder[this.bloqconditions[i].show] : 0;
+				console.log(`index current ${indexCurrentStep} index actual ${indexActualStep} and show step ${this.bloqconditions[i].show}`);
+				console.log(indexCurrentStep >= this.bloqconditions[i].show);
+				//if(!this.bloqconditions[i].show || (this.bloqconditions[i].show && indexCurrentStep >= indexActualStep)){
+					let conditionAux = this.bloqconditions[i].condition;
+
+					mapkeys.forEach(function (key) {
+
+						if (conditionAux.includes(`$${key}`)) {
+							conditionAux = conditionAux.replaceAll('$', 'mapsobjsdb.');
+						}
+
+					})
+					if (this.calccondition(conditionAux, mapsobjsdb) && (!this.bloqconditions[i].show || (this.bloqconditions[i].show && indexCurrentStep >= indexActualStep))) {
+						if (this.mapErrors.lstmsg.indexOf(this.bloqconditions[i].msg) == -1) {
+							if (!this.mapErrors.bloq) {
+								this.mapErrors.bloq = this.bloqconditions[i].bloq.bloq;
+								this.showAlert = true;
+							}
+
+							this.mapErrors.lstmsgErrors.push({'msg' : this.bloqconditions[i].msg, 'icon' : this.bloqconditions[i].icon});
+							this.mapErrors.lstmsg.push(this.bloqconditions[i].msg);
+
+							this.mapErrors.lststeps = this.mapErrors.lststeps.concat(this.bloqconditions[i].bloq.steps);												
+							//this.mapErrors.lstIcons = this.bloqconditions[i].icon;
+						}
+					} else {
+						if (this.mapErrors.lstmsg.length > 0 && this.mapErrors.lstmsg.indexOf(this.bloqconditions[i].msg) != -1) {
+
+							let msgindex = this.mapErrors.lstmsg.indexOf(this.bloqconditions[i].msg);
+							this.mapErrors.lstmsg.splice(msgindex, 1);
+							this.mapErrors.lstmsgErrors.splice(msgindex, 1);
+
+							if (this.mapErrors.lststeps.length > 0 && this.mapErrors.lststeps.indexOf(this.bloqconditions[i].bloq.steps) != - 1) {
+								this.mapErrors.lststeps.splice(this.mapErrors.lststeps.indexOf(this.bloqconditions[i].bloq.steps), 1);
+							}
+
+						}
+						if (this.mapErrors.lstmsg.length == 0) {
+
+							this.showAlert = false;
+							this.mapErrors.bloq = false;
+						} else {
+							this.showAlert = true;
+						}
+
+					}
+				//}
 			}
 
-			let msgalertel = this.template.querySelector('c-msg-alert');
-			console.log(msgalertel);
+			let msgalertel = this.template.querySelector('c-msg-alert');			
 			if(msgalertel){
 				msgalertel.refreshError(this.mapErrors);
 			}
 		}
 	}
 
-	/*
-	descShowForm(){
-		this.showForm = false;
-	}
 
-	actShowForm(){
-		this.showForm = true;
-	}
-*/
+	formatDate(date) {
+		var d = new Date(date),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
 
+		if (month.length < 2) 
+			month = '0' + month;
+		if (day.length < 2) 
+			day = '0' + day;
+
+		return [year, month, day].join('-');
+	}
 
 	calccondition(conditionAux, mapsobjsdb) {
-
-		return Function("mapsobjsdb", `return ${conditionAux}`)(mapsobjsdb);
+		//console.log('conditionAux ', conditionAux, ' mapsobjsdb ', mapsobjsdb);
+		let constants = this.fillConstants();
+		return Function("mapsobjsdb, constants", `return ${conditionAux}`)(mapsobjsdb, constants);
 	}
-
+	
+	
+	fillConstants(){
+		let constantsObj = {};
+		constantsObj.today = this.formatDate(new Date());
+		constantsObj.getAge = function calculateAge(birthday) { // birthday is a date
+			var ageDifMs = Date.now() - new Date(birthday).getTime();
+			var ageDate = new Date(ageDifMs); // miliseconds from epoch
+			//console.log('prueba123123 dos ', Math.abs(ageDate.getUTCFullYear() - 1970));
+			return Math.abs(ageDate.getUTCFullYear() - 1970);
+		}
+		return constantsObj;
+	}
 
 	cancelRefresh() {
 		this.init = true;
@@ -184,10 +229,11 @@ export default class DynamicPathForm extends LightningElement {
 
 	renderedCallback() {
 		//after everything is set, call initrules, that changes visibility rules and call services if needed
+		//let obBtns = this.template.querySelector('c-ob-webservice-buttons');		
 		if (this.initFormRulesBool) {
 			//logic here after everythyng is loaded
 			this.initFormRules(this.currentForm);
-		}
+		}		
 	}
 
 
@@ -212,30 +258,27 @@ export default class DynamicPathForm extends LightningElement {
 
 	}
 	checkParamsHiddenRules(apiName, sobjx , fvalue) {
+		
 		let actionstr = '';
 		let apiNameField = sobjx + '.' + apiName;
-		if (apiNameField in this.config_hiddenFields) {
-			console.log(`leyendo las reglas de ${apiName} con tamaño ${this.config_hiddenFields[apiNameField].length} `);
-
+		
+		if (apiNameField in this.config_hiddenFields) {			
+			
 			for (let i = 0; i < this.config_hiddenFields[apiNameField].length; i++) {
 				let hiddenRule = this.config_hiddenFields[apiNameField][i];
-				actionstr = '';
-				console.log("leyendo regla ", JSON.parse(JSON.stringify(hiddenRule)));
+				actionstr = '';				
 				if (hiddenRule.value == fvalue || (hiddenRule.value == '$.' && fvalue != null)) {
 					actionstr = 'show';
 				} else if (hiddenRule.value != fvalue || (hiddenRule.value == '$.' && fvalue == null)) {
 					actionstr = 'hide'
-				}
-				console.log(`action ${actionstr}`);
-
+				}				
+				console.log(`apiNameField ${apiNameField} actionstr ${actionstr}`);
 				if (actionstr) {
 					if (Array.isArray(hiddenRule.show)) {
-						for (let j = 0; j < hiddenRule.show.length; j++) {
-							console.log(`action ${actionstr} ${hiddenRule.show[j]}`);
+						for (let j = 0; j < hiddenRule.show.length; j++) {							
 							this.toggleFieldVisibility(hiddenRule.show[j], actionstr);
 						}
-					} else {
-						console.log(`action ${actionstr} ${hiddenRule.show}`);
+					} else {						
 						this.toggleFieldVisibility(hiddenRule.show, actionstr);
 
 					}
@@ -245,11 +288,11 @@ export default class DynamicPathForm extends LightningElement {
 	}
 	// Metodo para cuando cambie el step
 	fieldChanged(evt) {
-		//
+		console.log('Salta el onchange ');
 		let evtinfo = evt.detail;
-		console.log('>>>>>>>>>> prueba ', JSON.parse(JSON.stringify(evtinfo)));
+		console.log('evtinfo', evtinfo.api);
 		//this.currentForm[evtinfo.index].value = evtinfo.value;
-		this.checkParamsHiddenRules(evtinfo.api, evtinfo.sobj, evtinfo.value);
+		this.checkParamsHiddenRules(evtinfo.api? evtinfo.api : evtinfo.key, evtinfo.sobj, evtinfo.value);
 		/*if (evtinfo.api in this.config_hiddenFields && (this.config_hiddenFields[evtinfo.api].value == evtinfo.value || this.config_hiddenFields[evtinfo.api].value == '$.')) {
 			this.toggleFieldVisibility(this.config_hiddenFields[evtinfo.api].show, 'show');
 		} else if (evtinfo.api in this.config_hiddenFields && (this.config_hiddenFields[evtinfo.api].value != evtinfo.value || (this.config_hiddenFields[evtinfo.api].value == '$.' && evtinfo.value == null))) {
@@ -258,14 +301,12 @@ export default class DynamicPathForm extends LightningElement {
 
 		switch (evtinfo.action) {
 			case 'add':
-				this.toggleBgEditColor(evtinfo.api, evtinfo.sobj, true);
-				console.log('draftvalues ', JSON.parse(JSON.stringify(evtinfo)));
+				this.toggleBgEditColor(evtinfo.api, evtinfo.sobj, true);				
 				this.fillDraftValues(evtinfo);
 				this.lastValPicklist = JSON.parse(JSON.stringify(evtinfo));
 				break;
 			case 'remove':
-			if(this.draftValues[evtinfo.sobj] && this.draftValues[evtinfo.sobj].hasOwnProperty(evtinfo.key)){
-					console.log('this.draftValues[evtinfo.key] ', this.draftValues[evtinfo.key]);
+				if(this.draftValues[evtinfo.sobj] && this.draftValues[evtinfo.sobj].hasOwnProperty(evtinfo.key)){					
 					delete this.draftValues[evtinfo.sobj][evtinfo.key];
 					//this.toggleBgEditColor(evtinfo.key, false)
 					this.toggleBgEditColor(evtinfo.key, evtinfo.sobj, false);
@@ -277,10 +318,10 @@ export default class DynamicPathForm extends LightningElement {
 			this.customEval(this.joinObjects(this.mapsobjsdb, this.draftValues));
 		} else {
 			this.customEval(this.mapsobjsdb);
-		}
-		console.log('this.draftValues ', this.draftValues);
+		}		
 
 		this.getWSParams(evtinfo.sobj, evtinfo.api, evtinfo.value);
+		console.log(' this.draftValues',  this.draftValues);
 	}
 
 	joinObjects(obj1, obj2) {
@@ -322,7 +363,7 @@ export default class DynamicPathForm extends LightningElement {
 	}
 
 	fillDraftValues(evtinfo) {
-
+		console.log(`filldraft values ${evtinfo.api} ${evtinfo.value}`);
 		switch (evtinfo.action) {
 			case 'add':
 				if (!this.draftValues[evtinfo.sobj]) this.draftValues[evtinfo.sobj] = {};
@@ -347,16 +388,17 @@ export default class DynamicPathForm extends LightningElement {
 	}
 
 	// Metodo para hacer campos invisibles, utiliza como parametros el nombre del objeto y si quiere cambiarlo a visible o invisible
-	toggleFieldVisibility(apiName, action) {
-		console.log('toggleFieldVisibility');
-		let apiNameLst = apiName.split('.');
-		console.log(`toggleFieldVisibility ${apiNameLst[1]} ${apiNameLst[0]}`)
+	toggleFieldVisibility(apiName, action) {		
+		let apiNameLst = apiName.split('.');		
 		// Si action es visible
 		if (action == 'show') {
+			console.log(`show ${apiNameLst[0]} ${apiNameLst[1]}`);
 			// Muestra el objeto
 			this.template.querySelector(`c-pathformfield[data-name="${apiNameLst[1]}"][data-sobj="${apiNameLst[0]}"]`).show();
 			// Si el action es hide
 		} else if (action == 'hide') {
+			console.log(`hide ${apiNameLst[0]} ${apiNameLst[1]}`);
+
 			// Quita el objeto
 			let pathFormEl = this.template.querySelector(`c-pathformfield[data-name="${apiNameLst[1]}"][data-sobj="${apiNameLst[0]}"]`);
 			if(this.draftValues[apiNameLst[0]]){
@@ -380,9 +422,7 @@ export default class DynamicPathForm extends LightningElement {
 		}
 	}
 
-	handleChangeEdit(evt) {
-		console.log(this.editAllInputs);
-		console.log('evt.sobj ', evt.detail.fieldSobj);
+	handleChangeEdit(evt) {				
 		if (evt.detail.action) {
 			//this.checkOtherEditableFields(evt.detail.fieldSobj);
 			let listPathform;
@@ -402,8 +442,7 @@ export default class DynamicPathForm extends LightningElement {
 
 	checkOtherEditableFields(sObjx){
 		let listPathform = this.template.querySelectorAll(`c-pathformfield`);
-		for (let i = 0; i < listPathform.length; i++) {
-			console.log(listPathform[i].finfo.sobj);
+		for (let i = 0; i < listPathform.length; i++) {			
 			if(listPathform[i].finfo.sobj != sObjx){
 				listPathform[i].readMode();
 			}
@@ -435,36 +474,37 @@ export default class DynamicPathForm extends LightningElement {
 				} 
 			}
 			if (!this.draftValues[this.sobjectType]) this.draftValues[this.sobjectType] = {};
-			if(this.actualStep == this.currentStep){
-				this.draftValues[this.sobjectType][this.stepFieldApiName] = Object.keys(this.configStepsOrder)[this.configStepsOrder[this.actualStep] + 1];
+			if(this.configStepsOrder && this.actualStep == this.currentStep){
+				if(this.mapErrors.lstmsg.length == 0){
+					if(!this.checkErrosIcons())this.draftValues[this.sobjectType][this.stepFieldApiName] = Object.keys(this.configStepsOrder)[this.configStepsOrder[this.actualStep] + 1];
+				}
 			}
+			console.log(this.draftValues);
 			this.customEval(Object.assign({}, this.mapsobjsdb, this.draftValues));
-			if (validInputs) {
-				console.log("valid inputs");
+			if (validInputs) {		
 				for(let key of Object.keys(this.mapsobjsdb)){
 					//Account-1
 					//this.draftValues[key+this.mapsobjsdb[i]]['Id'] = this.mapsobjsdb[i]['Id']
-					console.log("valid inputs" + key);
 					if(this.draftValues[key]){
 						this.draftValues[key]['Id'] = this.mapsobjsdb[key]['Id'];
 						//this.draftValues[key].attributes = {"type" : key};
 					}
-				}
-				console.log("to send this.draftValues ", this.draftValues);
+				}				
 				this.btnSaving = true;
 				this.viewOnly = this.disableSaveBtn;
+				
+				console.log('tosave ', this.draftValues);
 				this.dispatchEvent(new CustomEvent("savex", {
 					detail: { "draftValues": this.draftValues, "actualStep": this.actualStep,  "currentStep": this.currentStep }
 				}));
 			} else {
-
+				this.showSpinner = false;
 			}
 		}
 
 	}
 
-	showToast(title, msg, variant){
-		console.log('asdioasjkdoask');
+	showToast(title, msg, variant){		
 		this.dispatchEvent(new ShowToastEvent({
 			title: title,
 			message: msg,
@@ -472,73 +512,96 @@ export default class DynamicPathForm extends LightningElement {
 		}));
 	}
 
-	toggleBgEditColor(apiname, sobjname, add) {
-		console.log('apiname ', apiname , ' sobjname ', sobjname);
+	toggleBgEditColor(apiname, sobjname, add) {		
 		let div = this.template.querySelector(`lightning-layout-item[data-name="${apiname}"][data-sobj="${sobjname}"]`);
-		console.log('lo encontro ', div);
-		if (add) {
-			div.classList.add('editBgColor');
-		} else {
+		if(div){	
+			if (add) {
+				div.classList.add('editBgColor');
+			} else {
 
-			div.classList.remove('editBgColor');
+				div.classList.remove('editBgColor');
+			}
 		}
 
 	}
 
+
+
 	get disableSaveBtn() {
-
+		console.log(' this.actualStep ',  this.actualStep , ' this.currentStep ', this.currentStep , ' Object.keys(this.configStepsOrder) ', Object.keys(this.configStepsOrder), ' this.currentForm ', this.currentForm);
 		let disableBtn = true;
-		if(this.currentForm.length == 0)return disableBtn;
 
-		if (this.configStepsOrder) {
-
-
-			let indexCurrentStep = this.configStepsOrder[this.currentStep];
-			let indexActualStep = this.configStepsOrder[this.actualStep];
-			this.mapErrors.bloq == true 
-			
-			if (indexCurrentStep > indexActualStep ) {
-				disableBtn = true;
-			} else {
+		//let btnFooter = this.template.querySelector('div[slot="footer"]')?.querySelector('div[data-name="customBtns"]');
+		console.log('prueba ', Object.keys(this.configStepsOrder).indexOf(this.currentStep), ' ', this.currentStep);
+		if(this.currentForm.length != 0){
+			if(Object.keys(this.configStepsOrder).indexOf(this.currentStep) >= 0){
+				this.showFooter = false;
+			if (this.configStepsOrder) {
+				let indexCurrentStep = this.configStepsOrder[this.currentStep];
+				let indexActualStep = this.configStepsOrder[this.actualStep];
+				this.mapErrors.bloq == true;
+				if (indexCurrentStep > indexActualStep ) {
+					disableBtn = true;
+				} else {
+					disableBtn = false;
+				}
+				if(this.mapErrors.bloq == true){
+					if(this.checkErrosIcons()){
+						console.log('existe error');
+						if(this.labelBtnSave != 'Save'){
+							if(this.mapErrors.lststeps.length == 0) {						
+								disableBtn = true;
+							}else{
+								if(this.mapErrors.lststeps.includes(this.currentStep)){
+									disableBtn = true;
+								}
+							}		
+						}	
+					}		
+				}
+			}else{
 				disableBtn = false;
 			}
-
-			if(this.mapErrors.bloq == true){
-				if(this.mapErrors.lststeps.length == 0) {
-					console.log('Object.keys(this.mapErrors.lststeps).length ', this.mapErrors.lststeps.length);
-					disableBtn = true;
-				}else{
-					if(this.mapErrors.lststeps.includes(this.currentStep)){
-						disableBtn = true;
-					}
-				}
-				console.log('this.configStepsOrder.length ', JSON.parse(JSON.stringify(this.configStepsOrder)));
-
+			}else{
+				disableBtn = true;
+				this.showFooter = true;
 			}
-		}
 
-		if(this.btnSaving){
-			disableBtn = true;
-		}
 
+			if(this.btnSaving){
+				disableBtn = true;
+			}
+
+
+		}
+		/*if(btnFooter){			
+			if(disableBtn)btnFooter.classList.add('disableFooter');
+			else btnFooter.classList.remove('disableFooter');
+		}*/
 
 		return disableBtn;
 	}
 
+
+	checkErrosIcons(){
+		for(let i = 0; i < this.mapErrors.lstmsgErrors.length; i++){
+			console.log('lista ',this.mapErrors.lstmsgErrors[i] , ' index ' ,  this.mapErrors.lstmsgErrors[i].icon.indexOf('error'));
+			if(this.mapErrors.lstmsgErrors[i].icon.indexOf('error') >= 0 /* meter otra condición step */)return true;
+		}
+		return false;
+	}
+
 	getWSParams(sobj, api, value) {
 
-
-		let auxAllFieldsWithParams = this.currentForm.filter(el => el.params);
 		
-		for (let i = 0; i < auxAllFieldsWithParams.length; i++) {
-			console.log('with ws params ' , auxAllFieldsWithParams);
+		let auxAllFieldsWithParams = this.currentForm.filter(el => el.params);
+		//console.log('getWSParams ', auxAllFieldsWithParams);
+		for (let i = 0; i < auxAllFieldsWithParams.length; i++) {			
 
-			let finfo = auxAllFieldsWithParams[i];
-			console.log('getparams ' + sobj+"."+api);
+			let finfo = auxAllFieldsWithParams[i];			
 			if (finfo.params[sobj+"."+api]) {
 
-				let sobjapiname = finfo.sobj+'.'+finfo.apiName;
-				console.log(sobjapiname);
+				let sobjapiname = finfo.sobj+'.'+finfo.apiName;				
 				if (!this.paramsWSConfig[sobjapiname]) {
 
 					this.paramsWSConfig[sobjapiname] = {};
@@ -546,14 +609,16 @@ export default class DynamicPathForm extends LightningElement {
 
 
 				this.paramsWSConfig[sobjapiname][finfo.params[sobj+"."+api]] = value;
-
-				console.log('this.paramsWSConfig', this.paramsWSConfig);
+				
 				if (Object.keys(this.paramsWSConfig[sobjapiname]).length == Object.keys(finfo.params).length) {
 
+					//console.log('this.paramsWSConfig ', this.paramsWSConfig[sobjapiname]);
 
-					let pathformfieldel = this.template.querySelector(`c-pathformfield[data-name="${finfo.apiName}"][data-sobj="${finfo.sobj}"]`);
-					console.log(`${finfo.apiName} llamo a ws con params `, this.paramsWSConfig[sobjapiname]);
-					if (pathformfieldel) pathformfieldel.callWS(finfo.endpoint, this.paramsWSConfig[sobjapiname]);
+					let pathformfieldel = this.template.querySelector(`c-pathformfield[data-name="${finfo.apiName}"][data-sobj="${finfo.sobj}"]`);					
+					if (pathformfieldel){
+						//pathformfieldel.clearInput();
+						pathformfieldel.callWS(finfo.endpoint, this.paramsWSConfig[sobjapiname]);
+					}
 
 				}
 			}

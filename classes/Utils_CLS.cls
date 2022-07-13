@@ -2,8 +2,8 @@
  * @description       : 
  * @author            : Rafael Vargas Pinilla
  * @group             : 
- * @last modified on  : 04-01-2022
- * @last modified by  : juan.duarte@vass.es
+ * @last modified on  : 06-30-2022
+ * @last modified by  : Rafael Vargas Pinilla
 **/
 public with sharing class Utils_CLS {
 
@@ -29,7 +29,6 @@ public with sharing class Utils_CLS {
 
 	//Comprueba si un objeto tiene cierto campo
 	public static boolean hasSObjectField(String fieldName, SObject so){
-		System.debug('fieldName--> '+fieldName);
         return so.getSobjectType().getDescribe().fields.getMap().keySet().contains(fieldName.toLowerCase());
     }
 
@@ -58,5 +57,45 @@ public with sharing class Utils_CLS {
             }
 
         return m;
+    }
+
+	public static String getCustomerId(String recordId){
+
+		String customerId =  [SELECT CustomerId__c FROM Account WHERE Id=:recordId].CustomerId__c;
+
+		return customerId;
+	}
+
+	public static Map<String,String> getRtMapIdDevname(String sObj){
+
+		Map<String, String> mapRtDevname = new Map<String,String>();
+		Map<String, Schema.RecordTypeInfo> mapRtInfo = Schema.getGlobalDescribe().get(sObj).getDescribe().getRecordTypeInfosByDeveloperName();
+
+		for(Schema.RecordTypeInfo rtInfo : mapRtInfo.values()){
+
+			if(rtInfo.isActive()){
+
+				mapRtDevname.put(rtInfo.getRecordTypeId(),rtInfo.getDeveloperName());
+
+			}
+
+		}
+
+		return mapRtDevname;
+	}
+
+	public static Map<String,String> getMapPickListApi_Values(string sObj,string PicklistField)
+	{
+		Map<String, String> mapPickListValues = new Map<String, String>();
+		Schema.SObjectType objSobjectType = Schema.getGlobalDescribe().get(sObj);
+		Schema.DescribeSObjectResult objDescribeSobject = objSobjectType.getDescribe();
+		Map<String, Schema.SObjectField> mapFields = objDescribeSobject.fields.getMap();
+		List<Schema.PicklistEntry> lstPickListValues = mapFields.get(PicklistField).getDescribe().getPickListValues();
+
+		for (Schema.PicklistEntry objPickList : lstPickListValues) {
+			mapPickListValues.put(objPickList.getValue(),objPickList.getLabel());
+		}
+
+		return mapPickListValues;
     }
 }

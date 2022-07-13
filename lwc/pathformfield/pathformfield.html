@@ -1,15 +1,28 @@
 <template>
-
 		<template if:false={isHidden}>
 		<!--<template if:false={isStandard}>-->
-			<template if:true={readOnly}>
+			<template if:true={fieldsInReadMode}>
 				<div class="slds-form__item" role="listitem">
-					<div data-viewonly={viewOnly} class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent inputCursor" onclick={changeToEdit}>
-					<span class="slds-form-element__label">{field.label}</span>
+					<div data-islink={isLinkSobj} data-readmode={isReadMode} data-viewonly={viewOnly} class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-form-element_stacked slds-hint-parent inputCursor" onclick={changeToEdit}>
+						<span class="slds-form-element__label"><abbr class="slds-required" title="required" if:true={isRequired}>* </abbr>{field.label}</span>
 						<div class="slds-form-element__control">
-							
 							<template if:true={isText}>
 								<div class="slds-form-element__static">{field.value}</div>
+							</template>
+							
+							<template if:true={isRichText}>
+								<lightning-formatted-rich-text value={field.value}></lightning-formatted-rich-text>
+							</template>
+
+							<template if:true={isCurrency}>
+								<div class="slds-form-element__static"><lightning-formatted-number value={field.value} format-style="currency" currency-code="USD"></lightning-formatted-number></div>
+							</template>
+
+							<template if:true={isBoolean}>
+									<div class="slds-form-element__static">
+											<lightning-icon icon-name="utility:check" if:true={field.value} alternative-text="check" title="check"  size="x-small"></lightning-icon>
+											<lightning-icon icon-name="utility:steps" if:false={field.value} alternative-text="`nocheck" title="nocheck"  size="x-small"></lightning-icon>
+									</div>
 							</template>
 
 							<template if:true={isPicklist}>
@@ -17,7 +30,7 @@
 							</template>
 
 							<template if:false={viewOnly}>
-								<lightning-icon icon-name="utility:edit" alternative-text="edit" title="Edit" onclick={changeToEdit} class="liEdit"  size="xx-small"></lightning-icon>
+								<lightning-icon if:false={isReadMode} icon-name="utility:edit" alternative-text="edit" title="Edit" onclick={changeToEdit} class="liEdit"  size="xx-small"></lightning-icon>
 								<!--<lightning-button-icon icon-name="utility:edit" variant="bare" alternative-text="edit" title="Edit" onclick={changeToEdit}></lightning-button-icon>-->
 							</template>
 						</div>
@@ -25,38 +38,45 @@
 				</div>
 			</template>
 			
-			<template if:false={readOnly}>
-				<template if:false={isStandard}>
-			
-					<template if:true={isText}>
-						<lightning-input data-fieldtype="editablefields" type="text" required={isRequired} name={field.apiName} value={field.value} label={field.label} onchange={valueChanged}></lightning-input>
-					</template>
-
-					<template if:true={isPicklist}>
-						<lightning-combobox
-						data-fieldtype="editablefields"
-						dropdown-alignment="auto"
-						variant="label-stacked"
-						label={field.label}
-						value={field.value}
-						placeholder={field.attributes.placeholder}
-						options={field.attributes.options}
-						onchange={valueChanged}>
-						</lightning-combobox>
-					</template>
-
-				</template>
-			
-				<template if:true={isStandard}>
-					<lightning-record-edit-form
-					object-api-name={field.sobjInfo.sobjtype}
-					record-id={field.sobjInfo.sobjId}>
-						<lightning-input-field data-fieldtype="editablefields" variant="label-stacked" read-only={readOnly} field-name={field.apiName} required={isRequired} onchange={onChangeField}> </lightning-input-field>
-					</lightning-record-edit-form>
-				</template>
+			<template if:true={isEditable}>
 				
+				<template if:false={fieldsInReadMode}>
+					<template if:false={isStandard}>
+				
+						<template if:true={isText}>
+							<lightning-input data-fieldtype="editablefields" type="text" disabled={readOnly} required={isRequired} name={field.apiName} sobj={field.sobj} value={field.value} label={field.label} onchange={valueChanged}></lightning-input>
+						</template>
+
+						<template if:true={isPicklist}>
+							<lightning-combobox
+							data-fieldtype="editablefields"
+							dropdown-alignment="auto"
+							variant="label-stacked"
+							read-only={readOnly}
+							label={field.label}
+							required={isRequired}
+							value={field.value}
+							placeholder={field.attributes.placeholder}
+							options={field.attributes.options}
+							onchange={valueChanged}>
+							</lightning-combobox>
+						</template>
+
+					</template>
+				
+					<template if:true={isStandard}>
+						<lightning-record-edit-form
+						object-api-name={field.sobjInfo.sobjtype}
+						record-id={field.sobjInfo.sobjId}>
+							<span class="slds-form-element__label"><abbr data-ftype={field.fieldType} class="slds-required" title="required" if:true={isRequired}>* </abbr>{field.label}</span>
+							<lightning-input-field  data-fieldtype="editablefields" variant="label-hidden" disabled={readOnly} field-name={field.apiName} required={isRequired} onchange={onChangeField}> </lightning-input-field>
+						</lightning-record-edit-form>
+					</template>
+
+				</template>
+
 			</template>
+
 		</template>
 	
-
 </template>

@@ -1,18 +1,35 @@
 <template>
-	<template for:each={lstmsgErrors} for:item="error" for:index="index">
-		<div key={error.icon} class="alertmsg slds-m-vertical_small">
 
+	 <template for:each={lstAllErrors} for:item="error" for:index="index">
+	
+		<div key={error.icon} class={error.class}>
 			<div class={error.classTxt}>
-
+			
 				<div class="alert-title">
-
 					<lightning-icon icon-name={error.icon} alternative-text={error.icon} title={error.icon} size="xx-small"></lightning-icon>
 				</div>
-				<div class="alert-body">
-					{error.msg}
+				
+				<div class="alert-body" if:true={error.twoOrMore}>
+					<ul class="slds-list_dotted">
+						<template for:each={error.lstMsg} for:item="errorMsg" for:index="index">
+							<li key={errorMsg}>
+								<lightning-formatted-rich-text value={errorMsg}></lightning-formatted-rich-text>
+							</li>
+						</template>
+					</ul>
+				</div>
+
+				<div class="alert-body" if:false={error.twoOrMore}>
+					<ul>
+						<template for:each={error.lstMsg} for:item="errorMsg" for:index="index">
+							<li key={errorMsg}>
+								<lightning-formatted-rich-text value={errorMsg}></lightning-formatted-rich-text>
+							</li>
+						</template>
+					</ul>
 				</div>
 
 			</div>
 		</div>
-	</template>
+	 </template>
 </template>

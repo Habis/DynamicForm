@@ -1,22 +1,6 @@
 public with sharing class FieldCallouts {
 
-	public class Error {
-		public String code;
-		public string field;
-		public String message;
-	  }
 	
-	  public class errorResponseBody {
-		public List<Error> error;
-		public String getMessage() {
-		  List<String> errorMessages = new List<String>();
-		  for ( Error singleError: error ) {
-			errorMessages.add( singleError.message );
-		  }
-		  return String.join( errorMessages, ',' );
-		}
-	  }
-	  
 	  public class FieldRes extends ServiceVirtual_CLS {
 	
 		public FieldRes(String mdtName) {

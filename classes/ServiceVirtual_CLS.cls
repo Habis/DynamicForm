@@ -9,13 +9,14 @@ No.     Fecha           Autor                   Descripción
 -----   ----------      --------------------    -----------------------------------------------------
 1.0     2019-11-04		Jorge Levenfeld			Creación de la Clase.
 */
-public virtual class ServiceVirtual_CLS implements Service_CLS {
+public with sharing virtual class ServiceVirtual_CLS implements Service_CLS {
 
 	protected String mdtName;
 	protected Map<String, String> urlParams;
 	protected HttpRequest httpRequest = new HttpRequest();
 	protected String requestBodyJSON;
 	protected ResponseBody_CLS responseBody;
+	protected List<GetAllMovementsResponse> respListBody;
 	protected Object undefinedResponseBody;
 	protected Integer timeout = 120000;
   
@@ -32,11 +33,12 @@ public virtual class ServiceVirtual_CLS implements Service_CLS {
 	}
 	
 	public virtual void setRequestBody(RequestBody_CLS requestBody) {
-	  String serializedBody = requestBody.serializeRequestBody( requestBody );
-	  httpRequest.setBody( serializedBody );
-	  setRequestBodyJSON( serializedBody );
+		System.debug('@@@@@@@requestBody ->'+requestBody);
+		String serializedBody = requestBody.serializeRequestBody( requestBody );
+		httpRequest.setBody( serializedBody );
+		setRequestBodyJSON( serializedBody );
 	}
-	
+
 	public virtual void setRequestBody(String requestBody) {
 	  //String serializedBody = requestBody.serializeRequestBody( requestBody );
 	  httpRequest.setBody( requestBody );
@@ -54,10 +56,12 @@ public virtual class ServiceVirtual_CLS implements Service_CLS {
 	  httpRequest = Service_Helper_CLS.setCommonHeaders(httpRequest, mdtName, urlParams);
 	  httpRequest.setTimeout( timeout );system.debug( httpRequest );system.debug(httpRequest.getBody()  );
 	  HTTPResponse response = http.send(httpRequest);
+
+	  System.debug('@statusCode: ' + response.getStatusCode() );
+	  System.debug('@responseBodySerialize: ' + response.getBody());
   
 	  if (response.getStatusCode() >= 200 && response.getStatusCode() < 300 ) {
-		System.debug('@statusCode: ' + response.getStatusCode() );
-		responseBody = responseBody.deserializeResponseBody( response.getBody() );
+		responseBody = String.isNotBlank(response.getBody()) ? responseBody.deserializeResponseBody(response.getBody()) : null;
 		System.debug('@responseBody: ' + responseBody);
 	  } else {
 		manageErrorStatus(response);
@@ -66,6 +70,27 @@ public virtual class ServiceVirtual_CLS implements Service_CLS {
 	  return responseBody;
   
 	}
+
+	public virtual List<GetAllMovementsResponse> runBodyLst() {
+  
+		Http http = new Http();
+	
+		httpRequest = Service_Helper_CLS.setCommonHeaders(httpRequest, mdtName, urlParams);
+		httpRequest.setTimeout( timeout );system.debug( httpRequest );system.debug(httpRequest.getBody()  );
+		HTTPResponse response = http.send(httpRequest);
+	
+		if (response.getStatusCode() >= 200 && response.getStatusCode() < 300 ) {
+		  System.debug('@statusCode: ' + response.getStatusCode() );
+		  respListBody = (List<GetAllMovementsResponse>) System.JSON.deserialize(response.getBody(), List<GetAllMovementsResponse>.class);
+		  System.debug('@responseBody: ' + respListBody);
+		} else {
+		  manageErrorStatus(response);
+		}
+	
+		return respListBody;
+	
+	}
+	
 	public virtual Object runNoDefinedObj() {
   
 		Http http = new Http();
@@ -99,6 +124,21 @@ public virtual class ServiceVirtual_CLS implements Service_CLS {
 	  throw serviceException;
   
 	}
+
+	public virtual List<GetAllMovementsResponse> setMockListResponse() {
+
+		List<WebService_Info__mdt> lst_wsInfo = [
+			SELECT EndPoint__c, Method__c, Content_Type__c, mockResponse__c
+			FROM WebService_Info__mdt
+			WHERE DeveloperName = :mdtName
+		];
+
+		List<GetAllMovementsResponse> respListBody = (List<GetAllMovementsResponse>) JSON.deserialize(lst_wsInfo.get(0).mockResponse__c, List<GetAllMovementsResponse>.class);
+
+		System.debug('respListBody--> '+respListBody);
+		return respListBody;
+
+	}
   
 	public virtual ResponseBody_CLS setMockResponse() {
   
@@ -108,12 +148,12 @@ public virtual class ServiceVirtual_CLS implements Service_CLS {
 		  WHERE DeveloperName = :mdtName
 	  ];
   
-	  ResponseBody_CLS responseBody = responseBody.deserializeResponseBody( lst_wsInfo.get(0).mockResponse__c );
+	  ResponseBody_CLS responseBody = lst_wsInfo.get(0).mockResponse__c != null ? responseBody.deserializeResponseBody( lst_wsInfo.get(0).mockResponse__c ) : null;
   
 	  return responseBody;
   
 	}
-
+	
 	public virtual Object setMockResponseNoDefinedObj() {
   
 		List<WebService_Info__mdt> lst_wsInfo = [

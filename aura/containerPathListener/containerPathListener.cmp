@@ -8,4 +8,4 @@
 
 	<c:formBasedOnPath step="{!v.step}" stepsField="{!v.stepsField}" recordId="{!v.recordId}" oncancel="{!c.cancelPath}"/>
 	
-</aura:component>	
+</aura:component>
